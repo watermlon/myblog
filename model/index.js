@@ -26,3 +26,4 @@ userModel.find({},function (err, fluffy) {
         console.log('success',fluffy)
     }
 })
+
