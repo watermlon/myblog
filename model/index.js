@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 mongoose.connect('mongodb://101.200.63.181:27017',{
     user:'admin',
-    pass:'password'
+    pass:'password',
+    dbName :'blog'
 })
 const db = mongoose.connection;
 db.on('error',function(){
@@ -10,3 +11,18 @@ db.on('error',function(){
 db.once('open', function() {
    console.log('链接成功')
 });
+let userSchema = mongoose.Schema({
+    username: String,
+    password: String,
+    introduction: String,
+    avatar: String,
+    createtime: String
+})
+let userModel = mongoose.model('user', userSchema,'user')
+userModel.find({},function (err, fluffy) {
+    if (err) {
+        console.log(err)
+    } else {
+        console.log('success',fluffy)
+    }
+})
