@@ -12,11 +12,7 @@ db.once('open', function() {
    console.log('链接成功')
 });
 let user = require('./user.js')
-user.find({},function (err, fluffy) {
-    if (err) {
-        console.log(err)
-    } else {
-        console.log('success',fluffy)
-    }
-})
+module.exports = {
+    user
+}
 
