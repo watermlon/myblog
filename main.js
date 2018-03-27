@@ -5,5 +5,5 @@ require('./model')
     res.send('hello world')
  })
  app.listen(80,function(){
-     console.log('server runing')
+     console.log('server runing ')
  })
