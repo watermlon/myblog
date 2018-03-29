@@ -8,6 +8,11 @@ let get = function(req, res, next){
         }
     })
 }
+let post = function(req, res, next){
+    console.log(req)
+    res.send('hello')
+}
 module.exports = {
-    get
+    get,
+    post
 }
