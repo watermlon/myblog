@@ -5,18 +5,23 @@ let get = function(req, res, next){
         if (err) {
             console.log(err)
         } else {
-            let sendArr = []
-            fluffy.forEach(v=>{
-                sendArr.push({
-                    id:v.id,
-                    avatar:v.avatar,
-                    createtime:v.createtime,
-                    introduction:v.introduction,
-                    username:v.username
+            try {
+                let sendArr = []
+                fluffy.forEach(v=>{
+                    sendArr.push({
+                        id:v.id,
+                        avatar:v.avatar,
+                        createtime:v.createtime,
+                        introduction:v.introduction,
+                        username:v.username
+                    })
                 })
-            })
-            res.send(sendArr)
-            console.log('success',fluffy)
+                res.send(sendArr)
+                console.log('success',fluffy)
+            } catch (error) {
+                // console.log(error)
+                logger.error(error)
+            }
         }
     })
 }
