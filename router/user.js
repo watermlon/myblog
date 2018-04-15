@@ -20,7 +20,7 @@ let get = function(req, res, next){
                 console.log('success',fluffy)
             } catch (error) {
                 // console.log(error)
-                logger.error(error)
+                console.error(error)
             }
         }
     })

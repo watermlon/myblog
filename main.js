@@ -15,13 +15,16 @@ log4js.configure({
     categories: {
         default: { appenders: ['out', 'default'], level: 'all' },
         task: { appenders: ['task'], level: 'info' },
-        result: { appenders: ['result'], level: 'info' },
-        error: { appenders: ['error'], level: 'error' },
+        result: { appenders: ['out','result'], level: 'info' },
+        error: { appenders: ['out','error'], level: 'error' },
         rate: { appenders: ['rate'], level: 'info' },
     }
 });
 const logger = log4js.getLogger('default');
 console.log = logger.info.bind(logger);
+const loggerError = log4js.getLogger('error')
+console.error = logger.error.bind(loggerError);
+app.use(log4js.connectLogger(logger, {level:'auto', format:':method :url'}));
 app.all('*', function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
