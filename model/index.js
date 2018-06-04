@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 mongoose.connect('mongodb://101.200.63.181:27017',{
-    user:'admin',
-    pass:'password',
+    user:'root',
+    pass:'zhangcan1213',
     dbName :'blog'
 })
 const db = mongoose.connection;

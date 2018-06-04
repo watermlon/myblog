@@ -4,7 +4,8 @@ let userSchema = mongoose.Schema({
     password: String,//密码
     introduction: String,//简介
     avatar: String,//头像
-    createtime: String//创建时间
+    createtime: String,//创建时间
+    role:String
 })
 let userModel = mongoose.model('user', userSchema,'user')
 

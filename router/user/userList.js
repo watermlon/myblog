@@ -1,4 +1,4 @@
-const userModal = require('../model').user
+const userModal = require('../../model').user
 let get = function(req, res, next){
     //查询所有数据
     userModal.find({},function (err, fluffy) {
@@ -17,7 +17,6 @@ let get = function(req, res, next){
                     })
                 })
                 res.send(sendArr)
-                console.log('success',fluffy)
             } catch (error) {
                 // console.log(error)
                 console.error(error)
