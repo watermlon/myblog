@@ -45,16 +45,24 @@ app.all('*', function (req, res, next) {
     }/*让options请求快速返回*/
     else next();
 });
-// app.use(function(req,res,next){
-//     if(req.session.username){
-//         next()
-//     }else{
-//         res.send({
-//             err:'401'
-//         })
-//         res.end()
-//     }
-// })
+app.use(function(req,res,next){
+    console.log(req)
+    if(req.path=='/login'){
+        next()
+    }else{
+        if(req.query.token){
+           console.log(JWT.verify(req.query.token,'admin_token'))
+           console.log(JWT.decode(req.query.token))
+           next()
+        }else{
+            res.send({
+                err:'401'
+            })
+            res.end()
+        }
+    }
+   
+})
 //接受post参数设置
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
