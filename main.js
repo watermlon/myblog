@@ -50,16 +50,24 @@ app.use(function(req,res,next){
     if(req.path=='/login'){
         next()
     }else{
-        if(req.query.token){
-           console.log(JWT.verify(req.query.token,'admin_token'))
-           console.log(JWT.decode(req.query.token))
-           next()
-        }else{
+        try {
+            JWT.verify(req.query.token,'admin_token')
+            next()
+        } catch (error) {
             res.send({
                 err:'401'
             })
-            res.end()
         }
+        // if(req.query.token){
+        //    console.log(JWT.verify(req.query.token,'admin_token'))
+        //    console.log(JWT.decode(req.query.token))
+        //    next()
+        // }else{
+        //     res.send({
+        //         err:'401'
+        //     })
+        //     res.end()
+        // }
     }
    
 })
