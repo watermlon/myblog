@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 module.exports =  {
     randomWord(randomFlag, min, max) {
         let str = "",
@@ -13,5 +14,15 @@ module.exports =  {
             str += arr[pos];
         }
         return str;
+    },
+    encryption(str,randomStr=this.randomWord(false,10)){
+        const hash = crypto.createHash('md5');
+        // const randomStr = this.randomWord(false,10)
+        hash.update(str+randomStr);
+        let newStr = hash.digest('hex')
+        return {
+            str:newStr,
+            salt:randomStr
+        }
     }
 }

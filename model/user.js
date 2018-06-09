@@ -5,7 +5,8 @@ let userSchema = mongoose.Schema({
     introduction: String,//简介
     avatar: String,//头像
     createtime: String,//创建时间
-    role:String
+    role:String,//权限
+    salt:String
 })
 let userModel = mongoose.model('user', userSchema,'user')
 

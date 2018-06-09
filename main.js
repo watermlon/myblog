@@ -54,6 +54,7 @@ app.use(function (req, res, next) {
                                         if (err) {
                                             throw new Error(err)
                                         } else {
+                                            req.cookies.token = newToken
                                             next()
                                         }
                                     } catch (error) {

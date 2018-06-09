@@ -14,6 +14,9 @@
     <button id="login">登录</button>
     <button id="btn">请求</button>
     <button id="logout">退出</button>
+    <input type="text" id="oldpassword">
+    <input type="text" id="newpassword">
+    <button id="editpassword">修改密码</button>
 </body>
 <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 <script>
@@ -50,6 +53,19 @@
         $.ajax({
             url:'http://127.0.0.1/logout',
             type:'post',
+            success:function(){
+
+            }
+        })
+    })
+    $('#editpassword').click(function(){
+        $.ajax({
+            url:'http://127.0.0.1/editPassword',
+            type:'post',
+            data:{
+                oldPass:$('#oldpassword').val(),
+                newPass:$('#newpassword').val()
+            },
             success:function(){
 
             }
