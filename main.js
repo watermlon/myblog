@@ -4,7 +4,10 @@ const bodyParser = require('body-parser');
 const route = require('./router')
 const log4js = require('log4js');
 const JWT = require('jsonwebtoken')
+const cookiePaser = require('cookie-parser')
+const config = require('./config')
 // const session = require('express-session');
+app.use(cookiePaser())
 //log4js配置
 log4js.configure({
     appenders: {
@@ -36,6 +39,7 @@ app.use(log4js.connectLogger(logger, { level: 'auto', format: ':method :url' }))
 //跨域设置
 app.all('*', function (req, res, next) {
     console.log(req.headers.origin)
+    res.header("Access-Control-Allow-Credentials", true)
     res.header("Access-Control-Allow-Origin", req.headers.origin);
     res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
     res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
@@ -45,16 +49,69 @@ app.all('*', function (req, res, next) {
     }/*让options请求快速返回*/
     else next();
 });
-// app.use(function(req,res,next){
-//     if(req.session.username){
-//         next()
-//     }else{
-//         res.send({
-//             err:'401'
-//         })
-//         res.end()
-//     }
-// })
+const tokenMod = require('./model').token
+//登陆拦截器，判断有没有权限
+app.use(function (req, res, next) {
+    if (req.path == '/login') {
+        next()
+    } else {
+        //捕捉验证错误
+        try {
+            let token = JWT.verify(req.cookies.token, config.tokenSear)
+            tokenMod.find({ name: token.username }, function (err, val) {
+                //捕捉查询错误
+                try {
+                    if (err) {
+                        throw new Error(err)
+                    } else {
+                        if(val.length>0){
+                            let data = val.sort((a, b) => {
+                                return b.updateTime - a.updateTime
+                            })
+                            if (data[0].token === req.cookies.token) {
+                                let newToken = JWT.sign({ username: token.username }, config.tokenSear, { expiresIn: 60 * 30 })
+                                res.cookie('token', newToken.toString(), { path: '/', httpOnly: true })
+                                tokenMod.update({ name: token.username }, { token: newToken, updateTime: new Date().getTime() }, function (err) {
+                                    try {
+                                        if (err) {
+                                            throw new Error(err)
+                                        } else {
+                                            next()
+                                        }
+                                    } catch (error) {
+                                        logger.error(error)
+                                        res.status(500).send({
+                                            code:500,
+                                            msg:'服务器内部错误'
+                                        })
+                                    }
+                                })
+                            }
+                        }else{
+                            res.status(401).send({
+                                code:401,
+                                msg:'用户没有登陆'
+                            })
+                        }
+                    }
+                } catch (error) {
+                    logger.error(error)
+                    res.status(500).send({
+                        code:500,
+                        msg:'服务器内部错误'
+                    })
+                }
+            })
+        } catch (error) {
+            logger.error(error)
+            res.status(401).send({
+                code:401,
+                msg:'用户没有登陆'
+            })
+        }
+
+    }
+})
 //接受post参数设置
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
