@@ -1,5 +1,5 @@
 module.exports  = {
-    tokenSear : 'H974X5dG3m',
+    // tokenSear : 'H974X5dG3m',
     dbUsername : 'root',
     dbpassword:'zhangcan1213',
     dbName:'blog',

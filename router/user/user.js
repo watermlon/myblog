@@ -3,6 +3,7 @@ const userMod = Mod.user
 const tokenMod = Mod.token
 const JWT = require('jsonwebtoken')
 const config = require('../../config')
+const randomStr = require('../../unitl').randomWord
 let login = function (req, res) {
     try {
         userMod.find({ role: 'admin', username: req.body.username }, function (err, fluffy) {
@@ -13,13 +14,16 @@ let login = function (req, res) {
                     let userinfo = fluffy[0]
                     if (req.body.username == userinfo.username && req.body.password == userinfo.password) {
                         // req.session.username = req.body.username
-                        var token = JWT.sign({ username: req.body.username }, config.tokenSear, { expiresIn: 60 * 30 })
+                        let sear = randomStr(false,20)
+                        console.log(sear)
+                        var token = JWT.sign({ username: req.body.username }, sear, { expiresIn: 60 * 30 })
                         let now = new Date().getTime()
                         tokenMod.create({
                             token,
                             name: req.body.username,
                             creatTime: now,
-                            updateTime: now
+                            updateTime: now,
+                            sear
                         })
                         res.cookie('token', token.toString(), { path: '/', httpOnly: true })
                         res.send({

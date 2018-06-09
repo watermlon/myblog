@@ -6,6 +6,7 @@ const log4js = require('log4js');
 const JWT = require('jsonwebtoken')
 const cookiePaser = require('cookie-parser')
 const config = require('./config')
+const unitl = require('./unitl')
 // const session = require('express-session');
 app.use(cookiePaser())
 //log4js配置
@@ -55,23 +56,25 @@ app.use(function (req, res, next) {
     if (req.path == '/login') {
         next()
     } else {
-        //捕捉验证错误
-        try {
-            let token = JWT.verify(req.cookies.token, config.tokenSear)
-            tokenMod.find({ name: token.username }, function (err, val) {
-                //捕捉查询错误
-                try {
-                    if (err) {
-                        throw new Error(err)
-                    } else {
-                        if(val.length>0){
-                            let data = val.sort((a, b) => {
-                                return b.updateTime - a.updateTime
-                            })
-                            if (data[0].token === req.cookies.token) {
-                                let newToken = JWT.sign({ username: token.username }, config.tokenSear, { expiresIn: 60 * 30 })
+        tokenMod.find({ token: req.cookies.token }, function (err, val) {
+            //捕捉查询错误
+            try {
+                if (err) {
+                    throw new Error(err)
+                } else {
+                    if (val.length > 0) {
+                        // let data = val.sort((a, b) => {
+                        //     return b.updateTime - a.updateTime
+                        // })
+                        //捕捉验证错误
+                        try {
+                            let sear = val[0].sear
+                            let token = JWT.verify(req.cookies.token, sear)
+                            let newSear = unitl.randomWord(false,20)
+                            if (val[0].name === token.username) {
+                                let newToken = JWT.sign({ username: token.username }, newSear, { expiresIn: 60 * 30 })
                                 res.cookie('token', newToken.toString(), { path: '/', httpOnly: true })
-                                tokenMod.update({ name: token.username }, { token: newToken, updateTime: new Date().getTime() }, function (err) {
+                                tokenMod.update({ name: token.username }, { token: newToken, updateTime: new Date().getTime(), sear: newSear }, function (err) {
                                     try {
                                         if (err) {
                                             throw new Error(err)
@@ -81,34 +84,35 @@ app.use(function (req, res, next) {
                                     } catch (error) {
                                         logger.error(error)
                                         res.status(500).send({
-                                            code:500,
-                                            msg:'服务器内部错误'
+                                            code: 500,
+                                            msg: '服务器内部错误'
                                         })
                                     }
                                 })
                             }
-                        }else{
+                        } catch (error) {
+                            logger.error(error)
                             res.status(401).send({
-                                code:401,
-                                msg:'用户没有登陆'
+                                code: 401,
+                                msg: '用户没有登陆'
                             })
                         }
+                    } else {
+                        res.status(401).send({
+                            code: 401,
+                            msg: '用户没有登陆'
+                        })
                     }
-                } catch (error) {
-                    logger.error(error)
-                    res.status(500).send({
-                        code:500,
-                        msg:'服务器内部错误'
-                    })
                 }
-            })
-        } catch (error) {
-            logger.error(error)
-            res.status(401).send({
-                code:401,
-                msg:'用户没有登陆'
-            })
-        }
+            } catch (error) {
+                logger.error(error)
+                res.status(500).send({
+                    code: 500,
+                    msg: '服务器内部错误'
+                })
+            }
+        })
+
 
     }
 })
