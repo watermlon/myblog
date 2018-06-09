@@ -4,7 +4,8 @@ let token = mongoose.Schema({
     name:String,
     creatTime:Number,
     updateTime:Number,
-    sear:String
+    sear:String,
+    date:Date
 })
 let tokenModel = mongoose.model('token',token,'token')
 module.exports = tokenModel

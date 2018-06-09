@@ -9,4 +9,5 @@ route.get('/',function(req,res){
 route.get('/user',userList.get)
 route.post('/user',userList.post)
 route.post('/login',user.login)
+route.post('/logout',user.logout)
 module.exports = route

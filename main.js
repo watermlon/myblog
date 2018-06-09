@@ -7,36 +7,11 @@ const JWT = require('jsonwebtoken')
 const cookiePaser = require('cookie-parser')
 const config = require('./config')
 const unitl = require('./unitl')
+const logger = require('./log')
 // const session = require('express-session');
 app.use(cookiePaser())
-//log4js配置
-log4js.configure({
-    appenders: {
-        out: { type: 'console' },
-        // task: { type: 'dateFile', filename: 'logs/task', "pattern": "yyyy-MM-dd.log", alwaysIncludePattern: true },
-        // result: { type: 'dateFile', filename: 'logs/result', "pattern": "yyyy-MM-dd.log", alwaysIncludePattern: true },
-        // error: { type: 'dateFile', filename: 'logs/error', "pattern": "yyyy-MM-dd.log", alwaysIncludePattern: true },
-        write: { type: 'dateFile', filename: 'logs/default', "pattern": "yyyy-MM-dd.log", alwaysIncludePattern: true },
-        // rate: { type: 'dateFile', filename: 'logs/rate', "pattern": "yyyy-MM-dd.log", alwaysIncludePattern: true }
-    },
-    categories: {
-        default: { appenders: ['out', 'write'], level: 'all' },
-        dev: { appenders: ['out'], level: 'info' },
-        // result: { appenders: ['out', 'result'], level: 'info' },
-        // error: { appenders: ['out', 'error'], level: 'error' },
-        // rate: { appenders: ['rate'], level: 'info' },
-    }
-});
-const logger = log4js.getLogger('dev');
+
 app.use(log4js.connectLogger(logger, { level: 'auto', format: ':method :url' }));
-// app.use(session({
-//     secret: 'secret', // 对session id 相关的cookie 进行签名
-//     resave: true,
-//     saveUninitialized: false, // 是否保存未初始化的会话
-//     cookie: {
-//         maxAge: 1000 * 60 * 3, // 设置 session 的有效时间，单位毫秒
-//     },
-// }));
 //跨域设置
 app.all('*', function (req, res, next) {
     console.log(req.headers.origin)
@@ -74,7 +49,7 @@ app.use(function (req, res, next) {
                             if (val[0].name === token.username) {
                                 let newToken = JWT.sign({ username: token.username }, newSear, { expiresIn: 60 * 30 })
                                 res.cookie('token', newToken.toString(), { path: '/', httpOnly: true })
-                                tokenMod.update({ name: token.username }, { token: newToken, updateTime: new Date().getTime(), sear: newSear }, function (err) {
+                                tokenMod.update({ token: req.cookies.token }, { token: newToken, updateTime: new Date().getTime(), sear: newSear,date:new Date() }, function (err) {
                                     try {
                                         if (err) {
                                             throw new Error(err)
@@ -91,6 +66,7 @@ app.use(function (req, res, next) {
                                 })
                             }
                         } catch (error) {
+                            logger.info('验证错误')
                             logger.error(error)
                             res.status(401).send({
                                 code: 401,
@@ -98,6 +74,7 @@ app.use(function (req, res, next) {
                             })
                         }
                     } else {
+                        logger.info('数据库为空')
                         res.status(401).send({
                             code: 401,
                             msg: '用户没有登陆'

@@ -13,6 +13,7 @@
     <input type="text" id="password">
     <button id="login">登录</button>
     <button id="btn">请求</button>
+    <button id="logout">退出</button>
 </body>
 <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 <script>
@@ -40,6 +41,15 @@
             url:'http://127.0.0.1/user',
             type:'get',
 
+            success:function(){
+
+            }
+        })
+    })
+    $('#logout').click(function(){
+        $.ajax({
+            url:'http://127.0.0.1/logout',
+            type:'post',
             success:function(){
 
             }
