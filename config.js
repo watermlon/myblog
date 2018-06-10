@@ -4,5 +4,4 @@ module.exports  = {
     dbpassword:'zhangcan1213',
     dbName:'blog',
     dbUrl:'101.200.63.181:27017'
-
 }
