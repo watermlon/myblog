@@ -15,7 +15,7 @@ let publish = function (req, res) {
         logger.error(error)
         res.status(400).send({
             code: 400,
-            msg: '保存失败，参数错误'
+            msg: '保存失败，参数错误' 
         })
     }
     mod.create(addParams, function (err) {
