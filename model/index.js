@@ -1,8 +1,9 @@
 const mongoose = require('mongoose')
-mongoose.connect('mongodb://101.200.63.181:27017',{
-    user:'root',
-    pass:'zhangcan1213',
-    dbName :'blog'
+const config = require('../config')
+mongoose.connect('mongodb://'+config.dbUrl,{
+    user:config.dbUsername,
+    pass:config.dbpassword,
+    dbName :config.dbName
 })
 const db = mongoose.connection;
 db.on('error',function(){
@@ -12,7 +13,9 @@ db.once('open', function() {
    console.log('链接成功')
 });
 let user = require('./user.js')
+const token = require('./token')
 module.exports = {
-    user
+    user,
+    token
 }
 

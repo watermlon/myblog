@@ -6,17 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <link rel="stylesheet" href="">
 </head>
 
 <body>
     <input type="text" id="username">
     <input type="text" id="password">
     <button id="login">登录</button>
-    <button id="req">请求</button>
+    <button id="btn">请求</button>
+    <button id="logout">退出</button>
+    <input type="text" id="oldpassword">
+    <input type="text" id="newpassword">
+    <button id="editpassword">修改密码</button>
 </body>
 <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 <script>
-    var token = ''
+    $.ajaxSetup({
+        xhrFields: {
+          withCredentials: true
+       },
+       crossDomain:true,
+    })
     $('#login').click(function () {
         $.ajax({
             url: 'http://127.0.0.1/login',
@@ -40,6 +50,38 @@
             },
             success:function(){
                 
+            }
+        })
+    })
+    $('#btn').click(function(){
+        $.ajax({
+            url:'http://127.0.0.1/user',
+            type:'get',
+
+            success:function(){
+
+            }
+        })
+    })
+    $('#logout').click(function(){
+        $.ajax({
+            url:'http://127.0.0.1/logout',
+            type:'post',
+            success:function(){
+
+            }
+        })
+    })
+    $('#editpassword').click(function(){
+        $.ajax({
+            url:'http://127.0.0.1/editPassword',
+            type:'post',
+            data:{
+                oldPass:$('#oldpassword').val(),
+                newPass:$('#newpassword').val()
+            },
+            success:function(){
+
             }
         })
     })
