@@ -12,10 +12,12 @@ db.on('error',function(){
 db.once('open', function() {
    console.log('链接成功')
 });
-let user = require('./user.js')
+const user = require('./user.js')
 const token = require('./token')
+const article = require('./article')
 module.exports = {
     user,
-    token
+    token,
+    article
 }
 
