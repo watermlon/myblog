@@ -13,4 +13,5 @@ route.post('/login',user.login)
 route.post('/logout',user.logout)
 route.post('/editPassword',user.editPassword)
 route.post('/article/publish',article.publish)
+route.get('/article/list',article.getList)
 module.exports = route

@@ -32,6 +32,22 @@ let publish = function (req, res) {
         }
     })
 }
+//文章列表
+let getList = function(req, res){
+    let pageSzie = req.query.pageSzie||'';
+    let pageNo = req.query.pageNo||1;
+    console.log(req)
+    console.log(pageNo)
+    console.log(pageSzie)
+    mod.find({},function(err,val){
+        if(err){
+            
+        }else{
+            console.log(val)
+        }
+    }).limit(pageNo).skip((pageNo - 1)*pageSzie)
+}
 module.exports = {
-    publish
+    publish,
+    getList
 }

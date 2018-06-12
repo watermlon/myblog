@@ -55,9 +55,12 @@
     })
     $('#btn').click(function(){
         $.ajax({
-            url:'http://127.0.0.1/user',
+            url:'http://127.0.0.1/article/list',
             type:'get',
-
+            data:{
+                pageNo:1,
+                pageSzie:1
+            },
             success:function(){
 
             }
