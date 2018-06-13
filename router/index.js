@@ -14,4 +14,6 @@ route.post('/logout',user.logout)
 route.post('/editPassword',user.editPassword)
 route.post('/article/publish',article.publish)
 route.get('/article/list',article.getList)
+route.post('/article/edit',article.edit)
+route.post('/article/remove',article.remove)
 module.exports = route

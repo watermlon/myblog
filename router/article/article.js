@@ -9,8 +9,9 @@ let publish = function (req, res) {
         let title = req.body.title.toString()
         let desc = req.body.desc.toString()
         let createTime = new Date().getTime()
+        let updataTime = new Date().getTime()
         let category = req.body.category.toString()
-        addParams = { content, title, desc, createTime, category }
+        addParams = { content, title, desc, createTime, category,updataTime }
     } catch (error) {
         logger.error(error)
         res.status(400).send({
@@ -58,7 +59,53 @@ let getList = function (req, res) {
         }
     })
 }
+//修改文章
+let edit = function(req,res){
+    console.log(req)
+    let objId = req.body.id
+    let content = req.body.content.toString()
+    let title = req.body.title.toString()
+    let desc = req.body.desc.toString()
+    let updataTime = new Date().getTime()
+    let category = req.body.category.toString()
+    addParams = { content, title, desc, updataTime, category }
+    let objid = mod.getObjId(objId)
+    mod.update({"_id":objid},addParams,function(err){
+        if(err){
+            logger.error(err)
+            res.status(500).send({
+                code:500,
+                msg:'服务器异常'
+            })
+        }else{
+            res.send({
+                code:200,
+                msg:'修改成功'
+            })
+        }
+    })
+}
+//删除文章
+let remove = function(req,res){
+    let objId = mod.getObjId(req.body.id)
+    mod.update({"_id":objId},{"isDelete":true},function(err){
+        if(err){
+            logger.error(err)
+            res.status(500).send({
+                code:500,
+                msg:'服务器异常'
+            })
+        }else{
+            res.send({
+                code:200,
+                msg:'删除成功'
+            })
+        }
+    })
+}
 module.exports = {
     publish,
-    getList
+    getList,
+    edit,
+    remove
 }

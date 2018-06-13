@@ -15,6 +15,7 @@ db.once('open', function() {
 const user = require('./user.js')
 const token = require('./token')
 const article = require('./article')
+const categoryModel = require('./category')
 module.exports = {
     user,
     token,
