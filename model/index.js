@@ -18,6 +18,7 @@ const article = require('./article')
 module.exports = {
     user,
     token,
-    article
+    article,
+    categoryModel
 }
 

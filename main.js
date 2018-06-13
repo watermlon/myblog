@@ -17,7 +17,7 @@ app.all('*', function (req, res, next) {
     console.log(req.headers.origin)
     res.header("Access-Control-Allow-Credentials", true)
     res.header("Access-Control-Allow-Origin", req.headers.origin);
-    res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
+    res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Accept,X-Requested-With");
     res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
     res.header("X-Powered-By", '4.16.2')
     if (req.method == "OPTIONS") {
