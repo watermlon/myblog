@@ -11,7 +11,8 @@ let publish = function (req, res) {
         let createTime = new Date().getTime()
         let updataTime = new Date().getTime()
         let category = req.body.category.toString()
-        addParams = { content, title, desc, createTime, category,updataTime }
+        let isDelete = false
+        addParams = { content, title, desc, createTime, category, updataTime, isDelete }
     } catch (error) {
         logger.error(error)
         res.status(400).send({
@@ -46,7 +47,7 @@ let getList = function (req, res) {
     if (isNaN(pageNo)) {
         pageNo = 0
     }
-    mod.find({isDelete:false}, null, { skip: ((pageNo - 1) * pageSize), limit: (pageSize) }, function (err, val) {
+    mod.find({ isDelete: false }, null, { skip: ((pageNo - 1) * pageSize), limit: (pageSize) }, function (err, val) {
         if (err) {
             logger.error(err)
             res.status(500).send({
@@ -60,7 +61,7 @@ let getList = function (req, res) {
     })
 }
 //修改文章
-let edit = function(req,res){
+let edit = function (req, res) {
     console.log(req)
     let objId = req.body.id
     let content = req.body.content.toString()
@@ -70,36 +71,57 @@ let edit = function(req,res){
     let category = req.body.category.toString()
     addParams = { content, title, desc, updataTime, category }
     let objid = mod.getObjId(objId)
-    mod.update({"_id":objid},addParams,function(err){
-        if(err){
+    mod.update({ "_id": objid }, addParams, function (err) {
+        if (err) {
             logger.error(err)
             res.status(500).send({
-                code:500,
-                msg:'服务器异常'
+                code: 500,
+                msg: '服务器异常'
             })
-        }else{
+        } else {
             res.send({
-                code:200,
-                msg:'修改成功'
+                code: 200,
+                msg: '修改成功'
             })
         }
     })
 }
 //删除文章
-let remove = function(req,res){
+let remove = function (req, res) {
     let objId = mod.getObjId(req.body.id)
-    mod.update({"_id":objId},{"isDelete":true},function(err){
-        if(err){
+    mod.update({ "_id": objId }, { "isDelete": true }, function (err) {
+        if (err) {
             logger.error(err)
             res.status(500).send({
-                code:500,
-                msg:'服务器异常'
+                code: 500,
+                msg: '服务器异常'
             })
-        }else{
+        } else {
             res.send({
-                code:200,
-                msg:'删除成功'
+                code: 200,
+                msg: '删除成功'
             })
+        }
+    })
+}
+//根据ID查文章
+let queryArticle = function (req, res) {
+    let objId = mod.getObjId(req.body.id)
+    mod.find({ "_id": objId }, function (err, val) {
+        if (err) {
+            logger.error(err)
+            res.status(500).send({
+                code: 500,
+                msg: '服务器错误'
+            })
+        } else {
+            if(val.length==1){
+                res.send(val[0])
+            }else{
+                res.send({})
+            }
+            console.log(val)
+           
         }
     })
 }
@@ -107,5 +129,6 @@ module.exports = {
     publish,
     getList,
     edit,
-    remove
+    remove,
+    queryArticle
 }

@@ -16,4 +16,5 @@ route.post('/article/publish',article.publish)
 route.get('/article/list',article.getList)
 route.post('/article/edit',article.edit)
 route.post('/article/remove',article.remove)
+route.post('/article/query',article.queryArticle)
 module.exports = route

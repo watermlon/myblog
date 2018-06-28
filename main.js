@@ -99,6 +99,6 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 require('./model')
 app.use('/', route)
-app.listen(80, function () {
+app.listen(8022, function () {
     console.log('server runing ')
 })
