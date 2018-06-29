@@ -28,7 +28,7 @@ app.all('*', function (req, res, next) {
 const tokenMod = require('./model').token
 //登陆拦截器，判断有没有权限
 app.use(function (req, res, next) {
-    if (req.path == '/login' ||req.path =='/article/list') {
+    if (req.path == '/login' ||req.path =='/article/list'||req.path =='/article/query') {
         next()
     } else {
         tokenMod.find({ token: req.cookies.token }, function (err, val) {
